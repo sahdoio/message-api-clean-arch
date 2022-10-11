@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Authentication\AuthenticationController;
+use App\Http\Controllers\User\CreateUserController;
 use App\Http\Controllers\System\StatusController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\User\FindUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,11 +17,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
 Route::get('/',  [StatusController::class, 'apiAlive']);
 
-Route::post('/user/authenticate', [AuthenticationController::class, 'handle']);
+Route::post('/authenticate', [AuthenticationController::class, 'handle']);
+
+Route::prefix('users')->group(function () {
+    Route::post('/', [CreateUserController::class, 'handle']);
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('users')->group(function () {
+        Route::get('/{id}', [FindUserController::class, 'handle']);
+    });    
+});
+

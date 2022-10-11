@@ -10,7 +10,6 @@ final class FindUserRepositoryInputDto extends BaseDto
 {
     public function __construct(
         public readonly null|string $id = null,
-        public readonly null|string $email = null,
-        public readonly null|string $username = null
+        public readonly null|string $email = null
     ) {}
 }

@@ -13,13 +13,13 @@ class FindUserRepository extends BaseRepository implements FindUserRepositoryCon
 
     public function findOne(FindUserRepositoryInputDto $data): null|User
     {
+        if ($data->id) {
+            $this->queryBuilder->where('id', $data->id);
+        }
+
         if ($data->email) {
             $this->queryBuilder->where('email', $data->email);
         }
-
-        if ($data->username) {
-            $this->queryBuilder->where('username', $data->username);
-        }  
 
         return $this->queryBuilder->first();
     }

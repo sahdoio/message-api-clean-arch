@@ -21,7 +21,11 @@
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <env name="DB_DATABASE" value="testing"/>
+        <!-- According to the Laravel documentation, Sail overrides the DB name you defined in the .env file when you run the tests. -->
+        <env name="DB_DATABASE" value="message-api-test"/>
+        <env name="DB_HOST" value="mysql-test"/>
+        <env name="DB_USER" value="admin"/>
+        <env name="DB_PASSWORD" value="secret"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>

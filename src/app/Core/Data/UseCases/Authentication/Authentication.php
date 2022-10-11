@@ -25,14 +25,12 @@ class Authentication implements AuthenticationContract
 
         if (!$user || !Hash::check($data->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'email' => [__('validation.invalid_credentials')],
             ]);
         }
 
         $token = $user->createToken($data->email)->plainTextToken;
 
-        $loginUcOutputData = new AuthenticationOutputDto($token, $user);
-
-        return $loginUcOutputData;
+        return new AuthenticationOutputDto($token, $user);
     }
 }
