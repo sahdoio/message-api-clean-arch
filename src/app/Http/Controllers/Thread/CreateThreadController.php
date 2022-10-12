@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Thread;
 
 use App\Http\Controllers\Controller;
 use App\Core\Common\Log;
-use App\Core\Domain\UseCases\User\CreateUserContract;
-use App\Core\Domain\UseCases\User\CreateUserInputDto;
+use App\Core\Domain\UseCases\Thread\CreateThreadContract;
+use App\Core\Domain\UseCases\Thread\CreateThreadInputDto;
 use App\Core\Presentation\Helpers\APIResponse;
-use App\Core\Presentation\Controllers\CreateUserControllerContract;
+use App\Core\Presentation\Controllers\CreateThreadControllerContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class CreateUserController extends Controller implements CreateUserControllerContract
+class CreateThreadController extends Controller implements CreateThreadControllerContract
 {
     public function __construct(
-        private readonly CreateUserContract $createUser
+        private readonly CreateThreadContract $createThread
     ) {
     }
 
@@ -25,10 +25,7 @@ class CreateUserController extends Controller implements CreateUserControllerCon
     {
         try {
             $validate = Validator::make($request->input(), [
-                'full_name' => 'required|string',
-                'email' => 'required|string',
-                'password' => 'required|string|min:6',
-                'bio' => 'sometimes|string|min:2',
+                'title' => 'required|string'
             ]);
 
             if ($validate->fails()) {
@@ -36,14 +33,11 @@ class CreateUserController extends Controller implements CreateUserControllerCon
                 return APIResponse::badRequest($validate->getMessageBag()->all());
             }
 
-            $result = $this->createUser->exec(new CreateUserInputDto(
-                email: $request->email,
-                full_name: $request->full_name,
-                password: $request->password,
-                bio: $request->bio
+            $result = $this->createThread->exec(new CreateThreadInputDto(
+                title: $request->title
             ));
 
-            return APIResponse::success(__('createUser.success'), $result);
+            return APIResponse::success(__('createThread.success'), $result);
         } catch(ValidationException $e) {
             return APIResponse::badRequest([$e->getMessage()]);
         } catch (Exception $e) {

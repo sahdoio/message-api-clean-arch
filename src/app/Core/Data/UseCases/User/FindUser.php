@@ -8,6 +8,7 @@ use App\Core\Domain\UseCases\User\FindUserInputDto;
 use App\Core\Domain\UseCases\User\FindUserContract;
 use App\Core\Domain\UseCases\User\FindUserOutputDto;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 class FindUser implements FindUserContract
 {
@@ -24,7 +25,9 @@ class FindUser implements FindUserContract
         ));
 
         if (!$user) {
-            throw new ModelNotFoundException(__('validation.resource_not_found'));
+            throw ValidationException::withMessages([
+               __('validation.resource_not_found')
+            ]);
         }
 
         return new FindUserOutputDto($user);
