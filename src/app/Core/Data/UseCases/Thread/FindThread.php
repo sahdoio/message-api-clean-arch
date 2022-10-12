@@ -7,7 +7,7 @@ use App\Core\Data\Repositories\Thread\FindThreadRepositoryInputDto;
 use App\Core\Domain\UseCases\Thread\FindThreadContract;
 use App\Core\Domain\UseCases\Thread\FindThreadInputDto;
 use App\Core\Domain\UseCases\Thread\FindThreadOutputDto;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 class FindThread implements FindThreadContract
 {
@@ -23,7 +23,9 @@ class FindThread implements FindThreadContract
         ));
 
         if (!$thread) {
-            throw new ModelNotFoundException(__('validation.resource_not_found'));
+            throw ValidationException::withMessages([
+                __('validation.resource_not_found')
+            ]);
         }
 
         return new FindThreadOutputDto($thread);

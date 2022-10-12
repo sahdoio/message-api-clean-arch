@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Core\Data\UseCases\Message;
+
+use App\Core\Data\Repositories\Message\FindMessageRepositoryContract;
+use App\Core\Data\Repositories\Message\FindMessageRepositoryInputDto;
+use App\Core\Domain\UseCases\Message\ListMessagesContract;
+use App\Core\Domain\UseCases\Message\ListMessagesInputDto;
+use App\Core\Domain\UseCases\Message\ListMessagesOutputDto;
+
+class ListMessages implements ListMessagesContract
+{
+    public function __construct(
+        private readonly FindMessageRepositoryContract $findMessageRepository
+    ) {
+    }
+
+    public function exec(ListMessagesInputDto $data): ListMessagesOutputDto
+    {
+        $messages = $this->findMessageRepository->findAll(new FindMessageRepositoryInputDto(
+            thread_id: $data->thread_id,
+            user_id: $data->user_id,
+            body: $data->body
+        ));
+
+        return new ListMessagesOutputDto($messages);
+    }
+}

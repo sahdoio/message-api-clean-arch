@@ -10,6 +10,7 @@ use App\Core\Presentation\Helpers\APIResponse;
 use App\Core\Presentation\Controllers\FindUserControllerContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class FindUserController extends Controller implements FindUserControllerContract
@@ -19,14 +20,23 @@ class FindUserController extends Controller implements FindUserControllerContrac
     ) {
     }
 
-    public function handle(int $id): JsonResponse
+    public function handle(int|string $id): JsonResponse
     {
         try {
-            $result = $this->findUser->exec(new FindUserInputDto(id: $id));
+            $validate = Validator::make(['id' => $id], [
+                'id' => 'required|integer|not_in:0'
+            ]);
+
+            if ($validate->fails()) {
+                Log::error('Invalid parameters');
+                return APIResponse::badRequest($validate->getMessageBag()->all());
+            }
+
+            $result = $this->findUser->exec(new FindUserInputDto(id: intval($id)));
 
             return APIResponse::success(__('getUser.success'), $result);
-        } catch(ValidationException $e) {
-            return APIResponse::badRequest();
+        } catch (ValidationException $e) {
+            return APIResponse::badRequest([$e->getMessage()]);
         } catch (Exception $e) {
             Log::error($e);
             return APIResponse::serverError();

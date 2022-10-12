@@ -11,7 +11,7 @@ class FindUserRepository extends BaseRepository implements FindUserRepositoryCon
 {
     protected string $modelClass = 'User';
 
-    public function findOne(FindUserRepositoryInputDto $data): null|User
+    private function setFilters(FindUserRepositoryInputDto $data): void
     {
         if ($data->id) {
             $this->queryBuilder->where('id', $data->id);
@@ -20,7 +20,17 @@ class FindUserRepository extends BaseRepository implements FindUserRepositoryCon
         if ($data->email) {
             $this->queryBuilder->where('email', $data->email);
         }
+    }
 
+    public function findOne(FindUserRepositoryInputDto $data): null|User
+    {
+        $this->setFilters($data);
         return $this->queryBuilder->first();
+    }
+
+    public function findAll(FindUserRepositoryInputDto $data): null|array
+    {
+        $this->setFilters($data);
+        return $this->queryBuilder->get()->asArray();
     }
 }

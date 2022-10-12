@@ -27,7 +27,7 @@ class CreateThread implements CreateThreadContract
 
         if ($thread) {
             throw ValidationException::withMessages([
-                'email' => [__('validation.duplicated_resource')],
+                __('validation.duplicated_resource')
             ]);
         }
 

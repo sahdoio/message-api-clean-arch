@@ -11,8 +11,14 @@ class FindThreadRepository extends BaseRepository implements FindThreadRepositor
 {
     protected string $modelClass = 'Thread';
 
-    public function findOne(FindThreadRepositoryInputDto $data): null|Thread
-    {
+    private function setFilters(FindThreadRepositoryInputDto $data): void
+    {      
+        if ($data->user_id) {
+            $this->queryBuilder->select('threads.*');
+            $this->queryBuilder->join('messages', 'messages.thread_id', '=', 'threads.id');
+            $this->queryBuilder->where('messages.user_id', $data->user_id);
+        }
+
         if ($data->id) {
             $this->queryBuilder->where('id', $data->id);
         }
@@ -20,7 +26,17 @@ class FindThreadRepository extends BaseRepository implements FindThreadRepositor
         if ($data->title) {
             $this->queryBuilder->where('title', $data->title);
         }
+    }
 
+    public function findOne(FindThreadRepositoryInputDto $data): null|Thread
+    {
+        $this->setFilters($data);
         return $this->queryBuilder->first();
+    }
+
+    public function findAll(FindThreadRepositoryInputDto $data): null|array
+    {
+        $this->setFilters($data);
+        return $this->queryBuilder->get()->toArray();
     }
 }

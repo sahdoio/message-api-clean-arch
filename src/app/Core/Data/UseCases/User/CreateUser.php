@@ -28,7 +28,7 @@ class CreateUser implements CreateUserContract
 
         if ($user) {
             throw ValidationException::withMessages([
-                'email' => [__('validation.duplicated_resource')],
+                __('validation.duplicated_resource')
             ]);
         }
 

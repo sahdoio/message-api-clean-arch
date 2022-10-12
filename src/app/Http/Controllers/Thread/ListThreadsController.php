@@ -4,28 +4,30 @@ namespace App\Http\Controllers\Thread;
 
 use App\Http\Controllers\Controller;
 use App\Core\Common\Log;
-use App\Core\Domain\UseCases\Thread\CreateThreadContract;
-use App\Core\Domain\UseCases\Thread\CreateThreadInputDto;
+use App\Core\Domain\UseCases\Thread\ListThreadsContract;
+use App\Core\Domain\UseCases\Thread\ListThreadsInputDto;
 use App\Core\Presentation\Helpers\APIResponse;
-use App\Core\Presentation\Controllers\CreateThreadControllerContract;
+use App\Core\Presentation\Controllers\ListThreadsControllerContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class CreateThreadController extends Controller implements CreateThreadControllerContract
+class ListThreadsController extends Controller implements ListThreadsControllerContract
 {
     public function __construct(
-        private readonly CreateThreadContract $createThread
+        private readonly ListThreadsContract $listThreads
     ) {
     }
 
-    public function handle(Request $request): JsonResponse
+    public function handle(Request $request, int|string $userId): JsonResponse
     {
         try {
-            $validate = Validator::make($request->input(), [
-                'title' => 'required|string'
+            $data = $request->input();
+            $data['user_id'] = $userId;
+            $validate = Validator::make($data, [
+                'user_id' => 'required|integer|not_in:0'
             ]);
 
             if ($validate->fails()) {
@@ -33,12 +35,13 @@ class CreateThreadController extends Controller implements CreateThreadControlle
                 return APIResponse::badRequest($validate->getMessageBag()->all());
             }
 
-            $result = $this->createThread->exec(new CreateThreadInputDto(
+            $result = $this->listThreads->exec(new ListThreadsInputDto(
+                user_id: intval($userId),
                 title: $request->title
             ));
 
-            return APIResponse::success(__('createThread.success'), $result);
-        } catch(ValidationException $e) {
+            return APIResponse::success(__('listThreads.success'), $result);
+        } catch (ValidationException $e) {
             return APIResponse::badRequest([$e->getMessage()]);
         } catch (Exception $e) {
             Log::error($e);
