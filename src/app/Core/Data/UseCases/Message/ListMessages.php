@@ -18,8 +18,8 @@ class ListMessages implements ListMessagesContract
     public function exec(ListMessagesInputDto $data): ListMessagesOutputDto
     {
         $messages = $this->findMessageRepository->findAll(new FindMessageRepositoryInputDto(
-            thread_id: $data->thread_id,
             user_id: $data->user_id,
+            thread_id: $data->thread_id,
             body: $data->body
         ));
 

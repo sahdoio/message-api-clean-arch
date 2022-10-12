@@ -36,7 +36,7 @@ class UpdateMessageController extends Controller implements UpdateMessageControl
                 return APIResponse::badRequest($validate->getMessageBag()->all());
             }
 
-            $result = $this->updateMessage->exec(intval($messageId), new UpdateMessageInputDto(
+            $result = $this->updateMessage->exec($messageId, new UpdateMessageInputDto(
                 body: $request->body
             ));
 

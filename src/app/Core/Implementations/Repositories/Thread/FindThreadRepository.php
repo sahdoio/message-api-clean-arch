@@ -24,7 +24,7 @@ class FindThreadRepository extends BaseRepository implements FindThreadRepositor
         }
 
         if ($data->title) {
-            $this->queryBuilder->where('title', $data->title);
+            $this->queryBuilder->where('title', 'like', '%' . $data->title . '%');
         }
     }
 

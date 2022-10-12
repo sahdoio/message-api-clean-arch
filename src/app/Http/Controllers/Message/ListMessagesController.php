@@ -27,7 +27,9 @@ class ListMessagesController extends Controller implements ListMessagesControlle
             $data = $request->input();
             $data['thread_id'] = $threadId;
             $validate = Validator::make($data, [
-                'thread_id' => 'required|integer|not_in:0'
+                'thread_id' => 'required|integer|not_in:0',
+                'user_id' => 'sometimes|integer|not_in:0',
+                'body' => 'sometimes|string|min:2',
             ]);
 
             if ($validate->fails()) {
@@ -36,7 +38,7 @@ class ListMessagesController extends Controller implements ListMessagesControlle
             }
 
             $result = $this->listMessages->exec(new ListMessagesInputDto(
-                thread_id: intval($threadId),
+                thread_id: $threadId,
                 user_id: $request->user_id,
                 body: $request->body
             ));
