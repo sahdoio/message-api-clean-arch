@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Core\Common\Log;
 use App\Core\Domain\UseCases\User\FindUserContract;
 use App\Core\Domain\UseCases\User\FindUserInputDto;
-use App\Core\Presentation\APIResponse;
+use App\Core\Presentation\Helpers\APIResponse;
 use App\Core\Presentation\Controllers\FindUserControllerContract;
 use Exception;
 use Illuminate\Http\JsonResponse;

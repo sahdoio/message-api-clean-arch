@@ -3,6 +3,7 @@
 use App\Http\Controllers\Authentication\AuthenticationController;
 use App\Http\Controllers\User\CreateUserController;
 use App\Http\Controllers\System\StatusController;
+use App\Http\Controllers\Thread\CreateThreadController;
 use App\Http\Controllers\User\FindUserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,9 @@ Route::prefix('users')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('/{id}', [FindUserController::class, 'handle']);
+    });    
+    Route::prefix('threads')->group(function () {
+        Route::post('', [CreateThreadController::class, 'handle']);
     });    
 });
 

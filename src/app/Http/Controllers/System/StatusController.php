@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
-use App\Core\Presentation\APIResponse;
+use App\Core\Presentation\Helpers\APIResponse;
 use Illuminate\Http\JsonResponse;
 
 class StatusController extends Controller
