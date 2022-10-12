@@ -32,7 +32,7 @@ class FindUserController extends Controller implements FindUserControllerContrac
                 return APIResponse::badRequest($validate->getMessageBag()->all());
             }
 
-            $result = $this->findUser->exec(new FindUserInputDto(id: intval($id)));
+            $result = $this->findUser->exec(new FindUserInputDto(id: $id));
 
             return APIResponse::success(__('getUser.success'), $result);
         } catch (ValidationException $e) {
