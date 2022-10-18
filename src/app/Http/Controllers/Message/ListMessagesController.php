@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Message;
 
+use App\Core\Domain\Helpers\UcOptions;
 use App\Http\Controllers\Controller;
 use App\Core\Common\Log;
 use App\Core\Domain\UseCases\Message\ListMessagesContract;
@@ -18,8 +19,7 @@ class ListMessagesController extends Controller implements ListMessagesControlle
 {
     public function __construct(
         private readonly ListMessagesContract $listMessages
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request, int|string $threadId): JsonResponse
     {
@@ -37,13 +37,19 @@ class ListMessagesController extends Controller implements ListMessagesControlle
                 return APIResponse::badRequest($validate->getMessageBag()->all());
             }
 
-            $result = $this->listMessages->exec(new ListMessagesInputDto(
-                thread_id: $threadId,
-                user_id: $request->user_id,
-                body: $request->body
-            ));
+            $result = $this->listMessages->exec(
+                new ListMessagesInputDto(
+                    thread_id: $threadId,
+                    user_id: $request->user_id,
+                    body: $request->body
+                ),
+                new UcOptions(
+                    limit: $request->limit,
+                    page: $request->page
+                )
+            );
 
-            return APIResponse::success(__('listMessages.success'), $result);
+            return APIResponse::success(__('listMessages.success'), $result->get('messages'));
         } catch (ValidationException $e) {
             return APIResponse::badRequest([$e->getMessage()]);
         } catch (Exception $e) {

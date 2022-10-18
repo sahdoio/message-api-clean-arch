@@ -43,7 +43,7 @@ class SearchUserMessagesController extends Controller implements ListMessagesCon
                 body: $request->search_term
             ));
 
-            return APIResponse::success(__('searchUserMessages.success'), $result);
+            return APIResponse::success(__('searchUserMessages.success'), $result->get('messages'));
         } catch (ValidationException $e) {
             return APIResponse::badRequest([$e->getMessage()]);
         } catch (Exception $e) {

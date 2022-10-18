@@ -4,15 +4,16 @@ namespace App\Core\Implementations\Repositories\Message;
 
 use App\Core\Data\Repositories\Message\FindMessageRepositoryContract;
 use App\Core\Data\Repositories\Message\FindMessageRepositoryInputDto;
-use App\Models\Message;
+use App\Core\Domain\Helpers\UcOptions;
 use App\Core\Implementations\Repositories\BaseRepository;
+use App\Models\Message;
 
 class FindMessageRepository extends BaseRepository implements FindMessageRepositoryContract
 {
     protected string $modelClass = 'Message';
 
     private function setFilters(FindMessageRepositoryInputDto $data): void
-    {        
+    {
         if ($data->id) {
             $this->queryBuilder->where('id', $data->id);
         }
@@ -36,9 +37,9 @@ class FindMessageRepository extends BaseRepository implements FindMessageReposit
         return $this->queryBuilder->first();
     }
 
-    public function findAll(FindMessageRepositoryInputDto $data): null|array
+    public function findAll(FindMessageRepositoryInputDto $data, UcOptions $ucOptions): null|array
     {
         $this->setFilters($data);
-        return $this->queryBuilder->get()->toArray();
+        return $this->doQuery($ucOptions)->toArray();
     }
 }
