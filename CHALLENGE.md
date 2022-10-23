@@ -85,10 +85,3 @@ Endpoint parameters and return values are defined. You may decide whether parame
 > * Accepts target Thread id, search term string
 > * Returns a collection of Message models
 > * NOTE - You can decide whether to search strictly or loosely. Please document the behavior.
-
-## Submitting your work
-* When you have finished the assignment, create a github repository and share it with @jknight12882 and @soundsgoodsofar.
-* All submissions must include a `README.md` explaining how to install and run your application.
-* The `README.md` should contain notes about any design choices made that may not be immediately understood from reading the code
-* Code should be well commented
-* Your work should be "production ready"
